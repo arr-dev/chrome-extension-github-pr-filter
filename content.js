@@ -5,7 +5,7 @@ let fn = function() {
   let list = document.querySelectorAll('div#notification-center ul.filter-list');
   if (list.length === 0) { return true; }
 
-  const MERGED_SELECTOR = 'svg.type-icon-state-merged';
+  const MERGED_SELECTOR = 'span.type-icon-state-merged';
   const PR_SELECTOR = 'svg.octicon-git-pull-request';
 
   merged = addLink('Merged', MERGED_SELECTOR);
