@@ -8,11 +8,13 @@ let fn = function() {
   const MERGED_SELECTOR = 'span.type-icon-state-merged';
   const PR_SELECTOR = 'svg.octicon-git-pull-request';
 
-  merged = addLink('Merged', MERGED_SELECTOR);
-  all = addLink('All PRs', PR_SELECTOR);
+  merged = addFilterLink('Merged', MERGED_SELECTOR);
+  all = addFilterLink('All PRs', PR_SELECTOR);
+  markRead = addMarkAsReadLink('Mark visible as read');
 
   list[0].appendChild(all);
   list[0].appendChild(merged);
+  list[0].appendChild(markRead);
 };
 
 let iterateIssues = function(callback) {
@@ -23,16 +25,39 @@ let iterateIssues = function(callback) {
     });
 };
 
-let addLink = function(title, selector) {
-  countMerged = 0;
+let addMarkAsReadLink = function(title) {
+  let link = document.createElement('a');
+  link.className = 'filter-item';
+  link.innerHTML = title;
+
+  let el = document.createElement('li');
+  el.appendChild(link);
+
+  el.addEventListener('click', function() {
+    iterateIssues(function(item) {
+      if (item.style.display !== 'none') {
+        button = item.querySelector('button.delete-note');
+
+        if (button !== null) {
+          button.click();
+        }
+      }
+    });
+  });
+
+  return el;
+};
+
+let addFilterLink = function(title, selector) {
+  countMatched = 0;
   iterateIssues(function(item) {
     if (item.querySelector(selector) !== null) {
-      countMerged++;
+      countMatched++;
     }
   });
   let count = document.createElement('span');
   count.className = 'count';
-  count.innerHTML = countMerged;
+  count.innerHTML = countMatched;
 
   let link = document.createElement('a');
   link.className = 'filter-item';
